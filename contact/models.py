@@ -10,6 +10,7 @@ class Category (models.Model):
 
     def __str__(self) -> str:
         return f'{self.name}'
+    
 class contact (models.Model):
 
     first_name = models.CharField(max_length=50)
