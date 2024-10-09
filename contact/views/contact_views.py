@@ -1,4 +1,5 @@
-from django.shortcuts import render, get_object_or_404
+from django.db.models import Q  
+from django.shortcuts import render, get_object_or_404, redirect
 from contact.models import contact
 
 def index (request):
@@ -7,6 +8,31 @@ def index (request):
     data={
         'contacts': contacts,
         'site_title': "contactos - "
+    }
+
+    return render(
+        request,
+        'contact/index.html',
+        data
+    )
+
+def search (request):
+    search_value= request.GET.get('q', '').strip()
+    if(search== ' '):
+        redirect('contact:index')
+    contacts= contact.objects \
+    .filter(show=True).filter(
+        Q(first_name__icontains= search_value )|
+        Q(Last_name__icontains= search_value )|
+        Q(phone__icontains= search_value )|
+        Q(email= search_value )
+    )\
+    .order_by('-id')
+
+
+    data={
+        'contacts': contacts,
+        'site_title': "filter - "
     }
 
     return render(
